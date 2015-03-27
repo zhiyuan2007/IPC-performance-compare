@@ -2,6 +2,7 @@
 #include <unistd.h>  
 #include <fcntl.h>   
 #include <errno.h>  
+#include "../util.h"
 #define  FIFO_NAME  "namedpipe"  
 int main()  
 {  
@@ -13,10 +14,9 @@ int main()
         fifo_fd = mkfifo(FIFO_NAME, 0777);  
     }  
     fifo_fd = open(FIFO_NAME, O_RDONLY);  
-    printf("Opened named pipe for reading. \n");  
     while(1)  
     {  
-        num=read(fifo_fd,buf,1024);  
+        num = readline(fifo_fd, buf, 1024);  
         if(num == -1)  
         {  
             printf("Error[%d] when reading data into named pipe\n",errno);  
@@ -27,8 +27,7 @@ int main()
         }
         else
         {  
-            //buf[num] = '\0';  
-            //printf("Readed %d chars from pipe:%s\n", num, buf);  
+            printf("%s", buf);  
         }  
     }  
     close(fifo_fd);  

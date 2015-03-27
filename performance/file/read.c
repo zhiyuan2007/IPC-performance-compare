@@ -33,16 +33,9 @@ goon:    ch = getc(file);
     int pos = 0;
     int count = 0;
     char strbuf[2048]; 
-    while (ch != EOF) 
+    while (fgets(strbuf, 2048, file ) != NULL) 
     {
-        strbuf[pos++] = ch;
-        if (ch == '\n')
-        {
-             strbuf[pos] = '\0';
-             //printf("%s", strbuf);
-             pos = 0;
-        }
-        ch = getc(file);
+		printf("%s", strbuf);
     }
     fclose(file);
     //if (feof(file))

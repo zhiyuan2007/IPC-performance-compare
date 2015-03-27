@@ -14,33 +14,35 @@ struct msg_st
 int main()  
 {  
     int running = 1;  
-    int msgid = -1;  
     struct msg_st data;  
     long int msgtype = 0; //注意1  
   
-    msgid = msgget((key_t)1234, 0666 | IPC_CREAT);  
+    int msgid = msgget((key_t)1234, 0666 | IPC_CREAT);  
     if(msgid == -1)  
     {  
         fprintf(stderr, "msgget failed with error: %d\n", errno);  
         exit(EXIT_FAILURE);  
     }  
     int i  = 0;
+	int size = 0;
     while(running)  
     {  
-        if(msgrcv(msgid, (void*)&data, BUFSIZ, msgtype, 0) == -1)  
+        size = msgrcv(msgid, (void*)&data, BUFSIZ, msgtype, 0);
+		printf("size %d\n", size);
+		if (size == -1)
         {  
             fprintf(stderr, "msgrcv failed with errno: %d\n", errno);  
-            exit(EXIT_FAILURE);  
-        }  
-        i++;
-        if (i >= 10000000)
-            break;
+			return 1;
+        }
+		if (strcmp(data.text, "exit") == 0 )
+			break;
+	    printf("data %s", data.text);
     }  
     //删除消息队列  
     if(msgctl(msgid, IPC_RMID, 0) == -1)  
     {  
         fprintf(stderr, "msgctl(IPC_RMID) failed\n");  
-        exit(EXIT_FAILURE);  
-    }  
-    exit(EXIT_SUCCESS);  
+	    return 1;
+    } 
+	return 0;
 }  
