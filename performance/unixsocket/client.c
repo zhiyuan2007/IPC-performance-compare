@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <sys/un.h>
 #include <errno.h>
+#include "../util.h"
 
 #define CLI_PATH    "/var/tmp/"      /* +5 for pid = 14 chars */
 
@@ -14,7 +15,7 @@
  */
 int cli_conn(const char *name)
 {
-    int                fd, len, err, rval;
+    int fd, len, err, rval;
     struct sockaddr_un un;
 
     /* create a UNIX domain stream socket */
@@ -55,23 +56,20 @@ errout:
 int main()
 {
     const char *file = "foo.sock";
-    printf("connect\n");
     int connfd = cli_conn(file);
-    if(connfd<0)  
+    if(connfd < 0)  
     {  
-        printf("Error[%d] when connecting...",errno);  
-        return 0;  
+        printf("error[%d] when connecting...", errno);  
+        return 1;  
     }  
-    printf("Begin to recv/send...\n");    
-    int i,n,size;  
+    int i, size;  
     char rvbuf[4096];  
-    for(i=0;;i++)  
+    for(i = 0;; i++)  
     {  
-        size = recv(connfd, rvbuf, 1024, 0);     
-        if(size>0)  
+		size = readline(connfd, rvbuf, 1024);
+        if(size > 0)  
         {  
-            // rvbuf[size]='\0';  
-            //printf("%s\n",rvbuf);  
+            printf("%s", rvbuf);  
         }  
         else if (size == 0)
         {
@@ -79,7 +77,7 @@ int main()
         }
         else if(size==-1)  
         {  
-            printf("Error[%d] when recieving Data:%s.\n",errno,strerror(errno));      
+            printf("error[%d] when recieving data:%s.\n", errno, strerror(errno));      
             break;       
         }
   

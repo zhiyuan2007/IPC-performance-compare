@@ -5,18 +5,24 @@
 #include <linux/in.h>  
 #include <string.h>  
 
-int main()  
-{  
+#define SENDER_MSG "this is message just for performance test, no. "
+
+int main(int argc, char *argv[])  
+{   
+	if (argc != 2 ) {
+		printf("usage: ./server MSG_NUMBER\n");
+		return 1;
+	}
+	int msg_number = atoi(argv[1]);
     int sfp,nfp; /* 定义两个描述符 */  
     struct sockaddr_in s_add,c_add;  
     int sin_size;  
-    unsigned short portnum=0x8888; /* 服务端使用端口 */  
+    unsigned short portnum = 8888; /* 服务端使用端口 */  
 
-    printf("Hello,welcome to my server !\r\n");  
     sfp = socket(AF_INET, SOCK_STREAM, 0);  
     if(-1 == sfp)  
     {  
-        printf("socket fail ! \r\n");  
+        printf("socket fail\n");  
         return -1;  
     }  
 
@@ -28,16 +34,15 @@ int main()
     /* 使用bind进行绑定端口 */  
     if(-1 == bind(sfp,(struct sockaddr *)(&s_add), sizeof(struct sockaddr)))  
     {  
-        printf("bind fail !\r\n");  
+        printf("bind fail\n");  
         return -1;  
     }  
     /* 开始监听相应的端口 */  
     if(-1 == listen(sfp,5))  
     {  
-        printf("listen fail !\r\n");  
+        printf("listen fail\n");  
         return -1;  
     }  
-    printf("listen ok\r\n");  
 
     while(1)  
     {  
@@ -45,23 +50,22 @@ int main()
         nfp = accept(sfp, (struct sockaddr *)(&c_add), &sin_size);  
         if(-1 == nfp)  
         {  
-            printf("accept fail !\r\n");  
+            printf("accept fail\n");  
             return -1;  
         }  
         int i = 0;
         char rvbuf[1024];
-        for( ; i < 10000000; i++)
+        for( ; i < msg_number; i++)
         {
-            sprintf(rvbuf, "202.173.9.27 www.baidu.com a 1 3:%d\n", i);
-            if(-1 == write(nfp, rvbuf, strlen(rvbuf)+1), 0)  
+            sprintf(rvbuf, "%s%d\n", SENDER_MSG, i);
+            if(-1 == write(nfp, rvbuf, strlen(rvbuf)), 0)  
             {  
-                printf("write fail!\r\n");  
+                printf("write fail\n");  
                 return -1;  
             }  
         }
         close(nfp);  
         break;
-
     }  
     close(sfp);  
     return 0;  

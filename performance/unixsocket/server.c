@@ -9,6 +9,8 @@
 // the max connection number of the server  
 #define MAX_CONNECTION_NUMBER 5  
 
+#define SENDER_MSG "this is message just for performance test, no. "
+
 /* * Create a server endpoint of a connection. * Returns fd if all OK, <0 on error. */  
 int unix_socket_listen(const char *servername)  
 {   
@@ -26,22 +28,15 @@ int unix_socket_listen(const char *servername)
     len = offsetof(struct sockaddr_un, sun_path) + strlen(servername);   
     /* bind the name to the descriptor */   
     if (bind(fd, (struct sockaddr *)&un, len) < 0)  
-    {   
         rval = -2;   
-    }   
     else  
     {  
         if (listen(fd, MAX_CONNECTION_NUMBER) < 0)      
-        {   
             rval =  -3;   
-        }  
         else  
-        {  
             return fd;  
-        }  
     }  
-    int err;  
-    err = errno;  
+    int err = errno;  
     close(fd);   
     errno = err;  
     return rval;    
@@ -78,8 +73,7 @@ int unix_socket_accept(int listenfd, uid_t *uidptr)
             rval = -3;     /* not a socket */   
         }  
     }  
-    int err;  
-    err = errno;   
+    int err = errno;   
     close(clifd);   
     errno = err;  
     return(rval);  
@@ -90,37 +84,41 @@ void unix_socket_close(int fd)
     close(fd);       
 }  
 
-int main(void)  
+int main(int argc, char *argv[])  
 {   
-    int listenfd,connfd;   
-    listenfd = unix_socket_listen("foo.sock");  
-    if(listenfd<0)  
+	if (argc != 2 ) {
+		printf("usage: ./server MSG_NUMBER\n");
+		return 1;
+	}
+	int msg_number = atoi(argv[1]);
+    int listenfd = unix_socket_listen("foo.sock");  
+    if(listenfd < 0)  
     {  
-        printf("Error[%d] when listening...\n",errno);  
+        printf("error[%d] when listening...\n", errno);  
         return 0;  
     }  
     uid_t uid;  
-    connfd = unix_socket_accept(listenfd, &uid);  
+    int connfd = unix_socket_accept(listenfd, &uid);  
     unix_socket_close(listenfd);    
-    if(connfd<0)  
+    if(connfd < 0)  
     {  
-        printf("Error[%d] when accepting...\n",errno);  
+        printf("error[%d] when accepting...\n", errno);  
         return 0;  
     }    
-    printf("Begin to recv/send...\n");    
-    int i,n,size;  
+    printf("begin to recv and send...\n");    
+    int i, size;  
     char rvbuf[2048];  
-    for(i=0;i<10000000;i++)  
+    for(i = 0; i < msg_number; i++)  
     {  
-        sprintf(rvbuf, "202.173.9.27 www.baidu.com a 1 3:%d", i);
-        size = send(connfd, rvbuf, strlen(rvbuf)+1, 0);  
-        if(size>=0)  
+        sprintf(rvbuf, "%s%d\n", SENDER_MSG, i);
+        size = send(connfd, rvbuf, strlen(rvbuf), 0);  
+        if(size >= 0)  
         {  
-            //printf("Data[%d] Sended:%s.\n",size,rvbuf);  
+            printf("data[%d] sended:%s",size,rvbuf);  
         }  
-        if(size==-1)  
+		else if(size == -1)  
         {  
-            printf("Error[%d] when Sending Data:%s.\n",errno,strerror(errno));     
+            printf("error[%d] when sending data:%s.\n",errno,strerror(errno));     
             break;        
         }  
     }  

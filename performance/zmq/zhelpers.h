@@ -17,12 +17,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-
-#if (defined (WIN32))
-#   include <time.h>
-#else
-#   include <sys/time.h>
-#endif
+#include <time.h>
 
 #include <assert.h>
 #include <signal.h>
