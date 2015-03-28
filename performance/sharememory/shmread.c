@@ -24,8 +24,6 @@ int main()
         fprintf(stderr, "shmat failed\n");  
         exit(EXIT_FAILURE);  
     }  
-    printf("\nMemory attached at %X\n", (int)shm);  
-    //设置共享内存  
     shared = (struct shared_use_st*)shm;  
     shared->written = 0;  
     while(running)//读取共享内存中的数据  

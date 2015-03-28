@@ -23,7 +23,7 @@ int main()
 		char *temp = s_recv(sender);
 		if (strcmp(temp, "exit") == 0)
 			break;
-		printf("buff: %s", temp);
+		//printf("buff: %s", temp);
 	}
 	zmq_close(sender);
 	zmq_ctx_destroy(context);

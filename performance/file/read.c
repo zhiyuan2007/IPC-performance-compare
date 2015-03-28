@@ -35,7 +35,7 @@ goon:    ch = getc(file);
     char strbuf[2048]; 
     while (fgets(strbuf, 2048, file ) != NULL) 
     {
-		printf("%s", strbuf);
+		//printf("%s", strbuf);
     }
     fclose(file);
     //if (feof(file))

@@ -105,7 +105,6 @@ int main(int argc, char *argv[])
         printf("error[%d] when accepting...\n", errno);  
         return 0;  
     }    
-    printf("begin to recv and send...\n");    
     int i, size;  
     char rvbuf[2048];  
     for(i = 0; i < msg_number; i++)  
@@ -114,7 +113,7 @@ int main(int argc, char *argv[])
         size = send(connfd, rvbuf, strlen(rvbuf), 0);  
         if(size >= 0)  
         {  
-            printf("data[%d] sended:%s",size,rvbuf);  
+            //printf("data[%d] sended:%s",size,rvbuf);  
         }  
 		else if(size == -1)  
         {  

@@ -69,7 +69,7 @@ int main()
 		size = readline(connfd, rvbuf, 1024);
         if(size > 0)  
         {  
-            printf("%s", rvbuf);  
+            //printf("%s", rvbuf);  
         }  
         else if (size == 0)
         {

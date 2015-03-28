@@ -4,6 +4,8 @@
 #include <string.h>  
 #include <sys/shm.h>  
 #include "shmdata.h"  
+
+#define SENDER_MSG "this is message just for performance test, no. "
   
 int main()  
 {  
@@ -26,7 +28,6 @@ int main()
         fprintf(stderr, "shmat failed\n");  
         exit(EXIT_FAILURE);  
     }  
-    printf("Memory attached at %X\n", (int)shm);  
     //设置共享内存  
     shared = (struct shared_use_st*)shm;  
     int i = 0;
@@ -41,7 +42,7 @@ int main()
         //向共享内存中写入数据  
         //printf("Enter some text: ");  
         //fgets(buffer, BUFSIZ, stdin);  
-        sprintf(buffer, "202.173.9.27 www.baidu.com a 1 3:%d\n", i);
+        sprintf(buffer, "%s%d\n", SENDER_MSG, i);
         strncpy(shared->text, buffer, strlen(buffer)+1);  
         //写完数据，设置written使共享内存段可读  
         shared->written = 1;  

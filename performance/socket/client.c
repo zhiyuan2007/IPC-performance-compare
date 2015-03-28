@@ -43,7 +43,7 @@ int main()
             printf("read data fail\n");  
             break;  
         }else {
-			printf("%s", buffer);
+		//	printf("%s", buffer);
 		}
     }
     close(cfd);  

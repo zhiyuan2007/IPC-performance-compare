@@ -11,7 +11,10 @@ int main(int argc, char *argv[])
     FILE *fp =fopen("test.txt", "w");
     int i = 0;
     for( ; i < msg_number; i++)
+	{
         fprintf(fp, "%s%d\n", SENDER_MSG, i);
+		fflush(fp);
+	}
     fclose(fp);
     return 0;
 }
