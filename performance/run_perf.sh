@@ -44,6 +44,9 @@ function makeit() {
    cd pipe
    make
    cd ..
+   cd sharememory
+   make
+   cd ..
 }
 
 echo "" > test_result.txt
@@ -94,6 +97,13 @@ which="file-read"
 speed ./read
 cd ..
 
+cd sharememory
+which="shmwrite"
+speed ./shmwrite $MSG_NUMBER
+sleep $sleeptime
+which="shmread"
+speed ./shmread
+cd ..
 
 echo "run result as follows..."
 cat test_result.txt |sort -k 4 -n -r

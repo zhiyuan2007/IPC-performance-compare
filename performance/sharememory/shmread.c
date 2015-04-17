@@ -40,7 +40,7 @@ int main()
                 running = 0;  
         }  
         else//有其他进程在写数据，不能读取数据  
-            usleep(1000);  
+            usleep(1);  
     }  
     //把共享内存从当前进程中分离  
     if(shmdt(shm) == -1)  
