@@ -35,6 +35,6 @@ Compare performance of IPC(Inter-Process Communication), include file, zeromq, s
 5	pipe	 
 6	socket	 
 7	file(flush)
-8	share-memory
+8	share-memory(可能不准，因为对共享内容的同步采用的usleep)
 测试方式为：把一定量的数据从服务器端发出，客户端进行接收，最后比较总耗时，并计算每秒能够处理的记录数。
 

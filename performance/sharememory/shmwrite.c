@@ -53,21 +53,17 @@ int main(int argc, char *argv[])
         strncpy(shared->text, buffer, strlen(buffer)+1);  
         //写完数据，设置written使共享内存段可读  
         shared->written = 1;  
-        //输入了end，退出循环（程序）  
-        if(strncmp(buffer, "end", 3) == 0)  
-            running = 0;  
         i++;
     }  
-        sprintf(buffer, "end");
-        strncpy(shared->text, buffer, strlen(buffer)+1);  
-        //写完数据，设置written使共享内存段可读  
-        shared->written = 1;  
+    sprintf(buffer, "end");
+    strncpy(shared->text, buffer, strlen(buffer)+1);  
+    //写完数据，设置written使共享内存段可读  
+    shared->written = 1;  
     //把共享内存从当前进程中分离  
     if(shmdt(shm) == -1)  
     {  
         fprintf(stderr, "shmdt failed\n");  
         exit(EXIT_FAILURE);  
     }  
-    sleep(2);  
     exit(EXIT_SUCCESS);  
 }
