@@ -99,7 +99,7 @@ cd ..
 
 cd sharememory
 which="shmwrite"
-speed ./shmwrite $MSG_NUMBER
+nohup ./shmwrite $MSG_NUMBER > /dev/null 2>&1 &
 sleep $sleeptime
 which="shmread"
 speed ./shmread
