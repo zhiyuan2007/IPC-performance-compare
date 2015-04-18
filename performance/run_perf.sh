@@ -97,12 +97,13 @@ which="file-read"
 speed ./read
 cd ..
 
+
 cd sharememory
-which="shmwrite"
-nohup ./shmwrite $MSG_NUMBER > /dev/null 2>&1 &
-sleep $sleeptime
 which="shmread"
-speed ./shmread
+nohup ./shmread  2>&1 &
+sleep $sleeptime
+which="shmwrite"
+speed ./shmwrite $MSG_NUMBER
 cd ..
 
 echo "run result as follows..."

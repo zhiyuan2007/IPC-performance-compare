@@ -28,6 +28,7 @@ Compare performance of IPC(Inter-Process Communication), include file, zeromq, s
 所以，近日针对项目需要高性能的进程间通信需求，对几种通信方式的性能进行了比较，结论如下：
 
 性能综合排序结果为（从好到差）
+0	share-memory(采用信号量进行同步控制，共享内存性能最好)
 1	zmq	 
 2	file（no flush）
 3	msgqueue	 
@@ -35,6 +36,5 @@ Compare performance of IPC(Inter-Process Communication), include file, zeromq, s
 5	pipe	 
 6	socket	 
 7	file(flush)
-8	share-memory(可能不准，因为对共享内容的同步采用的usleep)
 测试方式为：把一定量的数据从服务器端发出，客户端进行接收，最后比较总耗时，并计算每秒能够处理的记录数。
 
