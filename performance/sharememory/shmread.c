@@ -4,16 +4,7 @@
 #include <sys/sem.h>
 #include <sys/shm.h>  
 #include "shmdata.h"  
-  
-int main()  
-{  
-    int running = 1;//程序是否继续运行的标志  
-    void *shm = NULL;//分配的共享内存的原始首地址  
-    struct shared_use_st *shared;//指向shm  
-
-	int semid,ret,status;  
-    struct sembuf P ={0,-1,SEM_UNDO};
-    struct sembuf V ={0,1,SEM_UNDO};
+int sem_init() {
     key_t key;
     key = ftok("/home",'a');
     if(key<0)
@@ -21,16 +12,47 @@ int main()
          perror("ftok error");
          exit(1);
     }
-    semid = semget(key,1,IPC_CREAT|0666);
+    int semid = semget(key,1,IPC_CREAT|0666);
     if(semid<0)
     {
          perror("semget error");
          exit(1);
     }
+	return semid;
+}
 
-    int shmid;//共享内存标识符  
+
+ int sem_p(int semid) {
+    struct sembuf P ={0,-1,SEM_UNDO};
+    int ret=semop(semid,&P,1);
+    if(ret==-1)
+    {
+         perror("semop P error");
+         exit(1);
+    }
+	return 0;
+}
+
+int sem_v(int semid) {
+    struct sembuf V ={0,1,SEM_UNDO};
+    int ret=semop(semid,&V,1);
+    if(ret==-1)
+    {
+         perror("semop unlock error");
+         exit(1);
+    }  
+}
+
+int main()  
+{  
+    int running = 1;//程序是否继续运行的标志  
+    void *shm = NULL;//分配的共享内存的原始首地址  
+    struct shared_use_st *shared;//指向shm  
+
+	int semid,ret,status;  
+	semid = sem_init();
     //创建共享内存  
-    shmid = shmget((key_t)1234, sizeof(struct shared_use_st), 0666|IPC_CREAT);  
+    int shmid = shmget((key_t)1234, sizeof(struct shared_use_st), 0666|IPC_CREAT);  
     if(shmid == -1)  
     {  
         fprintf(stderr, "shmget failed\n");  
@@ -60,21 +82,11 @@ int main()
                 running = 0;  
 				printf("get end comand\n");
 			}
-            ret=semop(semid,&V,1);
-            if(ret==-1)
-            {
-                 perror("semop unlock error");
-                 exit(1);
-            }  
+			sem_v(semid);
         }  
         else//有其他进程在写数据，不能读取数据  
 		{
-         	ret=semop(semid,&P,1);
-            if(ret==-1)
-            {
-                 perror("semop P error");
-                 exit(1);
-            }
+			sem_p(semid);
             //printf("You wrote: %s", shared->text);  
             shared->written = 0;  
             if(strncmp(shared->text, "end", 3) == 0)  
