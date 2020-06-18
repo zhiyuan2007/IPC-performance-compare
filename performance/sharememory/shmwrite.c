@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
         //数据还没有被读取，则等待数据被读取,不能向共享内存中写入文本  
         if (shared->written == 1)  
         {  
-			sem_p(semid);
+			sem_v(semid);
             sprintf(buffer, "%s%d\n", SENDER_MSG, i);
             strncpy(shared->text, buffer, strlen(buffer)+1);  
             //写完数据，设置written使共享内存段可读  

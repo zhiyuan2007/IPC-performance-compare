@@ -1,6 +1,8 @@
 # IPC-performance-compare
 Compare performance of IPC(Inter-Process Communication), include file, zeromq, socket, unixsocket, share-memory, msq-queue and so on 
 
+# 共享内存不能运行问题已经修复
+# 关于共享内存的资料可以参考[共享内存](http://users.cs.cf.ac.uk/Dave.Marshall/C/node27.html)
 后续会把代码重新整理
 
 在项目中，经常会遇到单机上进程间的通信，常用的进程间通信方式一般有以下几种
