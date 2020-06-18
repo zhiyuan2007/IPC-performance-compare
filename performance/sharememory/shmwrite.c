@@ -32,6 +32,7 @@ int sem_set(int semid, int i) {
          perror("semctl error");
          exit(1);
     }
+    return ret;
 }
 int sem_p(int semid) {
     struct sembuf P ={0,-1,SEM_UNDO};
@@ -52,6 +53,7 @@ int sem_v(int semid) {
          perror("semop unlock error");
          exit(1);
     }  
+    return ret;
 }
 int sem_del(int semid) {
     int ret=semctl(semid,0,IPC_RMID,0);
@@ -60,6 +62,7 @@ int sem_del(int semid) {
           perror("semctl error");
           exit(1);
     } 
+    return ret;
 }
 int main(int argc, char *argv[])  
 {  

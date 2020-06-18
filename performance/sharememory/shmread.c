@@ -1,6 +1,7 @@
 #include <unistd.h>  
 #include <stdlib.h>  
 #include <stdio.h>  
+#include <string.h>  
 #include <sys/sem.h>
 #include <sys/shm.h>  
 #include "shmdata.h"  
@@ -41,6 +42,7 @@ int sem_v(int semid) {
          perror("semop unlock error");
          exit(1);
     }  
+    return ret;
 }
 
 int main()  
